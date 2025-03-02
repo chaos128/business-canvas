@@ -48,30 +48,41 @@ interface Record {
   type: RecordType;
 }
 
-const recordFields = [
+export const recordFields = [
   {
     type: "text",
     label: "이름",
     required: true,
+    dataIndex: "name",
   },
   {
     type: "text",
-    label: "이름",
+    label: "주소",
     required: true,
+    dataIndex: "address",
   },
   {
-    type: "text",
-    label: "이름",
+    type: "textarea",
+    label: "메모",
     required: true,
+    dataIndex: "memo",
   },
   {
-    type: "text",
-    label: "이름",
+    type: "date",
+    label: "가입일",
     required: true,
+    dataIndex: "createdAt",
   },
   {
-    type: "text",
-    label: "이름",
+    type: "select",
+    label: "직업",
     required: true,
+    dataIndex: "job",
+  },
+  {
+    type: "checkbox",
+    label: "이메일 주신 동의",
+    required: true,
+    dataIndex: "isContentedToReceiveEmail",
   },
 ];
