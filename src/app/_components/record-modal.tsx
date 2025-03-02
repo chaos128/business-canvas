@@ -1,15 +1,14 @@
 "use client";
 
-import { Input, Modal } from "antd";
-import { useEffect, useState } from "react";
-import { RecordDataType } from "./useRecordData";
-import { recordFields } from "./data";
+import ConditionalButton from "@/ui/conditonal-button";
 import FormItem from "@/ui/form-item";
-import { SubmitHandler, useForm } from "react-hook-form";
-import type { FormInstance, FormProps } from "antd";
-import { Button, Checkbox, Form } from "antd";
-import TextArea from "antd/es/input/TextArea";
 import { CloseOutlined } from "@ant-design/icons";
+import type { FormInstance, FormProps } from "antd";
+import { Button, Form, Modal } from "antd";
+import { useEffect, useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { recordFields } from "./data";
+import { RecordDataType } from "./useRecordData";
 
 type FieldType = {
   username?: string;
@@ -33,6 +32,7 @@ function RecordModal({
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
     console.log("Success:", values);
   };
+  const [form] = Form.useForm();
 
   const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
     errorInfo
@@ -63,6 +63,7 @@ function RecordModal({
       footer={null}
     >
       <Form
+        form={form}
         layout="vertical"
         name="basic"
         labelCol={{ span: 8 }}
@@ -77,6 +78,7 @@ function RecordModal({
           {recordFields.map(({ type, label, dataIndex, required }) => {
             return (
               <FormItem
+                key={dataIndex}
                 required={required}
                 type={type}
                 label={label}
@@ -84,38 +86,11 @@ function RecordModal({
               />
             );
           })}
-
-          {/*  <Form.Item<FieldType>
-          label="Username"
-          name="username"
-          rules={[{ required: true, message: "Please input your username!" }]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item<FieldType>
-          label="Password"
-          name="password"
-          rules={[{ required: true, message: "Please input your password!" }]}
-        >
-          <Input.Password />
-        </Form.Item>
-
-        <Form.Item<FieldType>
-          name="remember"
-          valuePropName="checked"
-          label={null}
-        >
-          <Checkbox>Remember me</Checkbox>
-        </Form.Item>
- */}
         </div>
         <div className="py-[1.2rem] px-[1.6rem] items-center flex-row-reverse flex gap-x-[0.8rem] bg-[#000000]/[2%] border-t-[1px] border-t-[#000000]/[6%]">
-          <Form.Item label={null} wrapperCol={{ offset: 0 }} className="!m-0">
-            <Button type="primary" htmlType="submit">
-              추가
-            </Button>
-          </Form.Item>
+          <SubmitButton form={form} fieldList={["name"]}>
+            추가
+          </SubmitButton>
           <Button>취소</Button>
         </div>
       </Form>
@@ -126,23 +101,23 @@ function RecordModal({
 export default RecordModal;
 
 const SubmitButton: React.FC<
-  React.PropsWithChildren<{ form: FormInstance }>
-> = ({ form, children }) => {
+  React.PropsWithChildren<{ form: FormInstance; fieldList: string[] }>
+> = ({ form, children, fieldList }) => {
   const [submittable, setSubmittable] = useState<boolean>(false);
 
   // Watch all values
-  const values = Form.useWatch([], form);
+  const values = Form.useWatch(fieldList, form);
 
   useEffect(() => {
     form
-      .validateFields({ validateOnly: true })
+      .validateFields(fieldList, { validateOnly: true })
       .then(() => setSubmittable(true))
       .catch(() => setSubmittable(false));
-  }, [form, values]);
+  }, [form, values, fieldList]);
 
   return (
-    <Button type="primary" htmlType="submit" disabled={!submittable}>
+    <ConditionalButton htmlType="submit" disabled={!submittable}>
       {children}
-    </Button>
+    </ConditionalButton>
   );
 };

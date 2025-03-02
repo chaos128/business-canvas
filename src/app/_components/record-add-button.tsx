@@ -2,20 +2,11 @@
 
 import ConditionalButton from "@/ui/conditonal-button";
 import { PlusOutlined } from "@ant-design/icons";
+import { ButtonProps } from "antd";
 
-function RecordAddButton({
-  className = "",
-  disabled = false,
-}: {
-  className?: string;
-  disabled?: boolean;
-}) {
+function RecordAddButton(props: ButtonProps) {
   return (
-    <ConditionalButton
-      icon={<PlusOutlined />}
-      disabled={disabled}
-      className={className}
-    >
+    <ConditionalButton {...props} icon={<PlusOutlined />}>
       추가
     </ConditionalButton>
   );
