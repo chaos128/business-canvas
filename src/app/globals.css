@@ -7,6 +7,10 @@
   --foreground: #171717;
 }
 
+html {
+  font-size: 10px;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
@@ -17,4 +21,8 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.record-modal .ant-modal-content {
+  padding: 0 !important;
 }

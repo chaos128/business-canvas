@@ -1,6 +1,7 @@
 "use client";
 
 import RecordAddButton from "./_components/record-add-button";
+import RecordModal from "./_components/record-modal";
 import RecordTable from "./_components/record-table";
 
 export default function Home() {
@@ -13,6 +14,17 @@ export default function Home() {
         </div>
 
         <RecordTable />
+
+        <RecordModal
+          recordData={undefined}
+          isModalOpen={true}
+          onCancel={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+          onOk={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
       </main>
     </div>
   );

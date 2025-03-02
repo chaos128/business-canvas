@@ -10,27 +10,6 @@ interface DataType {
   isContentedToReceiveEmail: boolean;
 }
 
-export const data: DataType[] = [
-  {
-    key: 1,
-    name: "John Doe",
-    address: "서울 강남구",
-    memo: "외국인",
-    createdAt: new Date("2024-10-02"),
-    job: "개발자",
-    isContentedToReceiveEmail: true,
-  },
-  {
-    key: 2,
-    name: "Foo Bar",
-    address: "서울 서초구",
-    memo: "한국인",
-    createdAt: new Date("2024-10-01"),
-    job: "PO",
-    isContentedToReceiveEmail: false,
-  },
-];
-
 const columns: TableColumnsType<DataType> = [
   {
     title: "Name",
@@ -42,7 +21,7 @@ const columns: TableColumnsType<DataType> = [
   },
 ];
 
-type RecordType = "text" | "textarea" | "date" | "select" | "checkbox";
+export type RecordType = "text" | "textarea" | "date" | "select" | "checkbox";
 
 interface Record {
   type: RecordType;
@@ -58,13 +37,13 @@ export const recordFields = [
   {
     type: "text",
     label: "주소",
-    required: true,
+    required: false,
     dataIndex: "address",
   },
   {
     type: "textarea",
     label: "메모",
-    required: true,
+    required: false,
     dataIndex: "memo",
   },
   {
@@ -81,8 +60,8 @@ export const recordFields = [
   },
   {
     type: "checkbox",
-    label: "이메일 주신 동의",
-    required: true,
+    label: "이메일 수신 동의",
+    required: false,
     dataIndex: "isContentedToReceiveEmail",
   },
 ];
