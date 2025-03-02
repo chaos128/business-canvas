@@ -1,7 +1,7 @@
 "use client";
 
+import ConditionalButton from "@/ui/conditonal-button";
 import { PlusOutlined } from "@ant-design/icons";
-import { Button } from "antd";
 
 function RecordAddButton({
   className = "",
@@ -11,21 +11,13 @@ function RecordAddButton({
   disabled?: boolean;
 }) {
   return (
-    <Button
+    <ConditionalButton
       icon={<PlusOutlined />}
       disabled={disabled}
-      className={`${className} ${
-        disabled
-          ? ""
-          : `!text-white
-     !bg-primary !border-primary
-     hover:!bg-primary-hover hover:!border-primary-hover
-    active:!bg-primary-active active:!border-primary-active`
-      }  
-    `}
+      className={className}
     >
       추가
-    </Button>
+    </ConditionalButton>
   );
 }
 
