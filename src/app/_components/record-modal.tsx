@@ -75,20 +75,14 @@ function RecordModal({
         autoComplete="off"
       >
         <div className="py-[1.8rem] px-[2.4rem]">
-          {recordFields.map(({ type, label, dataIndex, required }) => {
+          {recordFields.map((recordField) => {
             return (
-              <FormItem
-                key={dataIndex}
-                required={required}
-                type={type}
-                label={label}
-                name={dataIndex}
-              />
+              <FormItem key={recordField.dataIndex} recordField={recordField} />
             );
           })}
         </div>
         <div className="py-[1.2rem] px-[1.6rem] items-center flex-row-reverse flex gap-x-[0.8rem] bg-[#000000]/[2%] border-t-[1px] border-t-[#000000]/[6%]">
-          <SubmitButton form={form} fieldList={["name"]}>
+          <SubmitButton form={form} fieldList={["name", "createdAt"]}>
             추가
           </SubmitButton>
           <Button>취소</Button>
@@ -106,7 +100,8 @@ const SubmitButton: React.FC<
   const [submittable, setSubmittable] = useState<boolean>(false);
 
   // Watch all values
-  const values = Form.useWatch(fieldList, form);
+  const values = Form.useWatch([], form);
+  console.log(" values:", values, submittable);
 
   useEffect(() => {
     form

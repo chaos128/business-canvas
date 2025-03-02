@@ -1,4 +1,5 @@
 import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { ConfigProvider } from "antd";
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -23,7 +24,15 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <AntdRegistry>{children}</AntdRegistry>
+        <ConfigProvider
+          theme={{
+            token: {
+              colorPrimary: "#4a7cfe",
+            },
+          }}
+        >
+          <AntdRegistry>{children}</AntdRegistry>
+        </ConfigProvider>
       </body>
     </html>
   );

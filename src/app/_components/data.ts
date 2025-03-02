@@ -23,11 +23,7 @@ const columns: TableColumnsType<DataType> = [
 
 export type RecordType = "text" | "textarea" | "date" | "select" | "checkbox";
 
-interface Record {
-  type: RecordType;
-}
-
-export const recordFields = [
+export const recordFields: Record[] = [
   {
     type: "text",
     label: "이름",
@@ -57,6 +53,12 @@ export const recordFields = [
     label: "직업",
     required: true,
     dataIndex: "job",
+    defaultValue: "개발자",
+    options: [
+      { label: "개발자", value: "개발자" },
+      { label: "PO", value: "PO" },
+      { label: "디자이너", value: "디자이너" },
+    ],
   },
   {
     type: "checkbox",
@@ -65,3 +67,14 @@ export const recordFields = [
     dataIndex: "isContentedToReceiveEmail",
   },
 ];
+
+export type JobType = "개발자" | "PO" | "디자이너";
+
+export interface Record {
+  type: RecordType;
+  label: string;
+  required: boolean;
+  dataIndex: string;
+  defaultValue?: string;
+  options?: { label: string; value: JobType }[];
+}

@@ -4,7 +4,9 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #000000e0;
+  --primary: #4a7cfe;
+  --primary-hover: #739fff;
 }
 
 html {
@@ -25,4 +27,22 @@ body {
 
 .record-modal .ant-modal-content {
   padding: 0 !important;
+}
+
+.ant-select-item-option-selected {
+  color: var(--primary) !important;
+}
+
+.ant-select-open .ant-select-selection-item,
+.ant-select-open .ant-select-arrow {
+  color: var(--foreground) !important;
+}
+
+.ant-select:hover .ant-select-selection-item,
+.ant-select:hover .ant-select-arrow {
+  color: var(--primary-hover) !important;
+}
+
+.ant-select:hover .ant-select-selector {
+  border-color: var(--primary-hover) !important;
 }

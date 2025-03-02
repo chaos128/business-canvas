@@ -66,5 +66,7 @@ export const useRecordData = () => {
     ];
   }, []);
 
+  const addRecord = (record: Record) => {};
+
   return { recordData, columns };
 };

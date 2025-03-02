@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "antd";
 import { useState } from "react";
 import RecordAddButton from "./_components/record-add-button";
 import RecordModal from "./_components/record-modal";
@@ -21,7 +22,7 @@ export default function Home() {
         </div>
 
         <RecordTable />
-
+        <Button type="primary">123</Button>
         <RecordModal
           recordData={undefined}
           isModalOpen={isModalOpen}

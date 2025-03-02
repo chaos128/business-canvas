@@ -12,8 +12,8 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        primary: "#4A7CFE",
-        "primary-hover": "#739FFF",
+        primary: "var(--primary)",
+        "primary-hover": "var(--primary-hover)",
         "primary-active": "#345DD9",
         error: "#FF4D4F",
         tertiary: "#00000073",
@@ -28,7 +28,6 @@ const config: Config = {
           "1.4rem",
           { fontWeight: "600", lineHeight: "2.2rem", letterSpacing: "0%" },
         ],
-        lg: [],
       },
     },
   },
