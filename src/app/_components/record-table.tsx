@@ -1,7 +1,7 @@
 "use client";
 
 import { Table, TableProps } from "antd";
-import { IRecordData, useRecordColumns } from "./useRecordData";
+import { IRecordData, useRecordColumns } from "./useRecordColumns";
 import { useRecordDataStore } from "./useRecordDataStore";
 
 function RecordTable({

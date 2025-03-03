@@ -13,16 +13,16 @@ function RecordOptionDropdown({
 }) {
   const items: MenuProps["items"] = [
     {
-      label: <p onClick={() => handleEdit(record)}>수정</p>,
-      key: "0",
+      label: <a onClick={() => handleEdit(record)}>수정</a>,
+      key: "edit",
     },
     {
       label: (
-        <p className="text-error" onClick={() => handleDelete(record.key)}>
-          삭제
-        </p>
+        <a onClick={() => handleDelete(record.key)}>
+          <span className="text-error">삭제</span>
+        </a>
       ),
-      key: "1",
+      key: "delete",
     },
   ];
 

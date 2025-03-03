@@ -19,6 +19,7 @@ interface IRecordDataStore {
   isUsingLocalStorage: boolean;
   init(): void;
   addRecord(record: IRecordData): boolean;
+  editRecord(record: IRecordData): boolean;
   removeRecord(key: React.Key): void;
   updateRecordInLocalStorage: (recordDataList: IRecordData[]) => void;
 }
@@ -96,6 +97,28 @@ export const useRecordDataStore = create<IRecordDataStore>()(
 
       return true;
     },
+    editRecord: (record) => {
+      set((state) => {
+        if (state.recordDataList) {
+          const index = state.recordDataList.findIndex(
+            ({ key }) => key === record.key
+          );
+
+          if (index !== -1) {
+            state.recordDataList[index] = record;
+          }
+
+          if (state.isUsingLocalStorage) {
+            state.updateRecordInLocalStorage(state.recordDataList);
+          }
+        } else {
+          return false;
+        }
+      });
+
+      return true;
+    },
+
     removeRecord: (key) => {
       set((state) => {
         state.recordDataList = (state.recordDataList ?? []).filter(

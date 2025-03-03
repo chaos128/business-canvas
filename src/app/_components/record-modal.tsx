@@ -9,7 +9,7 @@ import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { recordFields } from "./data";
-import { IRecordData } from "./useRecordData";
+import { IRecordData } from "./useRecordColumns";
 import { useRecordDataStore } from "./useRecordDataStore";
 
 type FieldType = {
@@ -29,17 +29,24 @@ function RecordModal({
   onCancel: () => void;
   onOk: () => void;
 }) {
-  console.log(" recordData:", recordData);
   const addRecord = useRecordDataStore((state) => state.addRecord);
+  const editRecord = useRecordDataStore((state) => state.editRecord);
 
   const onFinish: FormProps<IRecordData>["onFinish"] = (values) => {
-    console.log("Success:", values);
-    if (
-      addRecord({
-        ...values,
-        createdAt: (values.createdAt as unknown as Dayjs).toDate(),
-      })
-    ) {
+    const newRecord = {
+      ...values,
+      createdAt: (values.createdAt as unknown as Dayjs).toDate(),
+    };
+    console.log(" newRecord:", newRecord);
+
+    let result;
+    if (recordData) {
+      result = editRecord({ ...newRecord, key: recordData.key });
+    } else {
+      result = addRecord(newRecord);
+    }
+
+    if (result) {
       form.resetFields();
       handleOk();
     }
@@ -105,7 +112,7 @@ function RecordModal({
         </div>
         <div className="py-[1.2rem] px-[1.6rem] items-center flex-row-reverse flex gap-x-[0.8rem] bg-[#000000]/[2%] border-t-[1px] border-t-[#000000]/[6%]">
           <SubmitButton form={form} fieldList={["name", "createdAt"]}>
-            추가
+            {recordData ? "수정" : "추가"}
           </SubmitButton>
           <Button
             onClick={() => {

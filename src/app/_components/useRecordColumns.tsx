@@ -33,8 +33,8 @@ export const useRecordColumns = ({
                   <span>{STRING_UTIL.dateToDateString(date)}</span>
                 )
               : type === "checkbox"
-              ? () => {
-                  return <Checkbox />;
+              ? (checked: boolean) => {
+                  return <Checkbox checked={checked} />;
                 }
               : undefined,
         };

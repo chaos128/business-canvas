@@ -17,6 +17,7 @@ function FormItem<T>({
         name={dataIndex}
         rules={[{ required, message: `${label}을 입력해주세요. ` }]}
         wrapperCol={{ span: 24 }}
+        valuePropName={type === "checkbox" ? "checked" : undefined}
       >
         {type === "text" ? (
           <Input
