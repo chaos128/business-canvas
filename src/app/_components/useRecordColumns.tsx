@@ -4,14 +4,20 @@ import { Checkbox, TableColumnsType } from "antd";
 import { Key, useMemo } from "react";
 import RecordEdit from "./record-edit";
 import { recordFields } from "./record.constant";
-import { IFilterMap, IRecordData } from "./useRecordDataStore";
+import {
+  IFilterMap,
+  IRecordData,
+  TRecordDataIndex,
+} from "./useRecordDataStore";
 
 export const useRecordColumns = ({
   filterMap,
+  filteredInfo,
   onEdit: handleEdit,
   onDelete: handleDelete,
 }: {
   filterMap: IFilterMap;
+  filteredInfo: Record<TRecordDataIndex, string[] | null>;
   onEdit: (record: IRecordData) => void;
   onDelete: (key: React.Key) => void;
 }) => {
@@ -53,7 +59,7 @@ export const useRecordColumns = ({
 
             return recordValue === value;
           },
-
+          filteredValue: filteredInfo[dataIndex] ?? null,
           render:
             type === "date"
               ? (date: Date) => <span>{STRING_UTIL.toDateString(date)}</span>
@@ -81,7 +87,7 @@ export const useRecordColumns = ({
         },
       },
     ];
-  }, [filterMap]);
+  }, [filterMap, handleEdit, handleDelete, filteredInfo]);
 
   return { columns };
 };

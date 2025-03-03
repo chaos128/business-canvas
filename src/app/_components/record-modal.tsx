@@ -59,10 +59,10 @@ function RecordModal({
       form.setFieldsValue(
         recordData
           ? { ...recordData, createdAt: dayjs(recordData.createdAt) }
-          : { job: "개발자" }
+          : { job: "개발자", isContentedToReceiveEmail: false }
       );
     }
-  }, [isModalOpen]);
+  }, [isModalOpen, form, recordData]);
 
   return (
     <Modal

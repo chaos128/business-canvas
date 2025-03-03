@@ -25,9 +25,12 @@ export default function Home() {
     setIsModalOpen(true);
   }, []);
 
-  const handleDelete = useCallback((key: Key) => {
-    removeRecord(key);
-  }, []);
+  const handleDelete = useCallback(
+    (key: Key) => {
+      removeRecord(key);
+    },
+    [removeRecord]
+  );
 
   const handleClose = () => {
     setRecordForEdit(undefined);

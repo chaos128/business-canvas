@@ -21,7 +21,7 @@ function FormItem<T, S>({
         {required && <span className="text-error ml-[0.4rem]">*</span>}
       </div>
 
-      <Form.Item<any>
+      <Form.Item<unknown>
         name={dataIndex}
         rules={[{ required, message: `${label}을 입력해주세요. ` }]}
         wrapperCol={{ span: 24 }}

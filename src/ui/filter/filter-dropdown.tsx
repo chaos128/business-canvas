@@ -16,6 +16,7 @@ function FilterDropdown({
   confirm: () => void;
 }) {
   const handleChange = (checked: boolean, value: string) => {
+    console.log(" handleChange : value:", value);
     if (checked) {
       setSelectedKeys([...selectedKeys, value]);
     } else {

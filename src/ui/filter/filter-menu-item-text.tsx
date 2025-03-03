@@ -9,6 +9,8 @@ function FilterMenuItemText({
   value: string;
 }) {
   if (type === "checkbox") {
+    console.log(" value:", value);
+
     if (value === "true") {
       return <span>선택됨</span>;
     } else {

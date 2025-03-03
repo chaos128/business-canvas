@@ -130,7 +130,9 @@ export const useRecordDataStore = create<IRecordDataStore>()(
             const value = record[recordDataIndex];
             const set = state.filterMap[recordDataIndex];
             if (value !== undefined) {
-              set.add(value.toString());
+              set.add(
+                value instanceof Date ? value.toISOString() : value.toString()
+              );
             }
           });
 
@@ -217,7 +219,9 @@ export const useRecordDataStore = create<IRecordDataStore>()(
             const value = record[recordDataIndex];
             const set = filterMap[recordDataIndex];
             if (value !== undefined) {
-              set.add(value.toString());
+              set.add(
+                value instanceof Date ? value.toISOString() : value.toString()
+              );
             }
           }
         );
