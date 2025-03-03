@@ -18,7 +18,7 @@ export interface IRecordData {
 }
 
 export type TRecordFieldValueType = string | boolean | Date;
-export type IFilterMap = Record<TRecordDataIndex, Set<TRecordFieldValueType>>;
+export type IFilterMap = Record<TRecordDataIndex, Set<string>>;
 
 interface IRecordDataStore {
   incrementingKey: number;
@@ -47,15 +47,15 @@ const initialState = {
     name: new Set<string>(),
     address: new Set<string>(),
     memo: new Set<string>(),
-    createdAt: new Set<Date>(),
+    createdAt: new Set<string>(),
     job: new Set<string>(),
-    isContentedToReceiveEmail: new Set<boolean>(),
+    isContentedToReceiveEmail: new Set<string>(),
   },
 };
 
 const INITIAL_RECORD_DATA_LIST: IRecordData[] = [
   {
-    key: 2,
+    key: "2",
     name: "John Doe",
     address: "서울 강남구",
     memo: "외국인",
@@ -64,7 +64,7 @@ const INITIAL_RECORD_DATA_LIST: IRecordData[] = [
     isContentedToReceiveEmail: true,
   },
   {
-    key: 1,
+    key: "1",
     name: "Foo Bar",
     address: "서울 서초구",
     memo: "한국인",
@@ -123,7 +123,7 @@ export const useRecordDataStore = create<IRecordDataStore>()(
             const value = record[recordDataIndex];
             const set = state.filterMap[recordDataIndex];
             if (value !== undefined) {
-              set.add(value);
+              set.add(value.toString());
             }
           });
 
@@ -194,9 +194,9 @@ export const useRecordDataStore = create<IRecordDataStore>()(
         name: new Set<string>(),
         address: new Set<string>(),
         memo: new Set<string>(),
-        createdAt: new Set<Date>(),
+        createdAt: new Set<string>(),
         job: new Set<string>(),
-        isContentedToReceiveEmail: new Set<boolean>(),
+        isContentedToReceiveEmail: new Set<string>(),
       };
 
       const newRecordDataList = recordDataList.map((record: IRecordData) => {
@@ -210,7 +210,7 @@ export const useRecordDataStore = create<IRecordDataStore>()(
             const value = record[recordDataIndex];
             const set = filterMap[recordDataIndex];
             if (value !== undefined) {
-              set.add(value);
+              set.add(value.toString());
             }
           }
         );

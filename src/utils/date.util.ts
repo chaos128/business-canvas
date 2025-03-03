@@ -6,6 +6,6 @@ export const DATE_UTIL: {
   addDays: (date, days) => {
     const newDate = new Date(date);
     newDate.setDate(newDate.getDate() + days);
-    return STRING_UTIL.dateToDateString(newDate);
+    return STRING_UTIL.toDateString(newDate);
   },
 };

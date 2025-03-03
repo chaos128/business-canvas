@@ -16,13 +16,6 @@ function RecordTable({
   const { columns } = useRecordColumns({ onEdit, onDelete, filterMap });
 
   const rowSelection: TableProps<IRecordData>["rowSelection"] = {
-    onChange: (selectedRowKeys: React.Key[], selectedRows: IRecordData[]) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        "selectedRows: ",
-        selectedRows
-      );
-    },
     getCheckboxProps: (record: IRecordData) => ({
       name: record.name,
     }),
@@ -30,9 +23,6 @@ function RecordTable({
 
   return (
     <Table<IRecordData>
-      onChange={(_, filters) => {
-        console.log(" filters:", filters);
-      }}
       id="record-table"
       rowSelection={rowSelection}
       columns={columns}

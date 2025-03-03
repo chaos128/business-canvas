@@ -1,9 +1,9 @@
 import { STRING_UTIL } from "@/utils/string.util";
 import { Checkbox, TableColumnsType } from "antd";
-import { useMemo } from "react";
+import { Key, useMemo } from "react";
 import { recordFields, RecordType } from "./data";
 import RecordOptionDropdown from "./record-option-dropdown";
-import { IFilterMap, TRecordFieldValueType } from "./useRecordDataStore";
+import { IFilterMap } from "./useRecordDataStore";
 
 export interface IRecordData {
   key: React.Key;
@@ -26,20 +26,24 @@ export const useRecordColumns = ({
 }) => {
   const columns: TableColumnsType<IRecordData> = useMemo(() => {
     const columnsFromRecordFields = recordFields.map(
-      ({ type, dataIndex, label }) => {
+      ({ type, dataIndex, label, columnWidth }) => {
         return {
           title: label,
           dataIndex,
+          width: columnWidth,
           filters: Array.from(filterMap[dataIndex]).map((value) => {
-            return { text: value, value };
+            return {
+              text: value,
+              value: value,
+            };
           }),
           filterDropdown: ({
             setSelectedKeys,
             selectedKeys,
             confirm,
           }: {
-            setSelectedKeys: (selectedKeys: TRecordFieldValueType[]) => void;
-            selectedKeys: TRecordFieldValueType[];
+            setSelectedKeys: (selectedKeys: Key[]) => void;
+            selectedKeys: Key[];
             confirm: () => void;
           }) => (
             <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
@@ -66,15 +70,18 @@ export const useRecordColumns = ({
               })}
             </div>
           ),
-          onFilter: (value: TRecordFieldValueType, record: IRecordData) => {
-            return record[dataIndex] === value;
+          onFilter: (value: boolean | Key, record: IRecordData) => {
+            const recordValue =
+              record[dataIndex] instanceof Date
+                ? record[dataIndex].toISOString()
+                : record[dataIndex]?.toString();
+
+            return recordValue === value;
           },
 
           render:
             type === "date"
-              ? (date: Date) => (
-                  <span>{STRING_UTIL.dateToDateString(date)}</span>
-                )
+              ? (date: Date) => <span>{STRING_UTIL.toDateString(date)}</span>
               : type === "checkbox"
               ? (checked: boolean) => {
                   return <Checkbox checked={checked} />;
@@ -87,6 +94,7 @@ export const useRecordColumns = ({
     return [
       ...columnsFromRecordFields,
       {
+        width: "4.8rem",
         render: (data) => {
           return (
             <RecordOptionDropdown
@@ -103,21 +111,15 @@ export const useRecordColumns = ({
   return { columns };
 };
 
-const FilterOption = ({
-  type,
-  value,
-}: {
-  type: RecordType;
-  value: string | Date | boolean;
-}) => {
+const FilterOption = ({ type, value }: { type: RecordType; value: string }) => {
   if (type === "checkbox") {
-    if (value) {
+    if (value === "true") {
       return <span>선택됨</span>;
     } else {
       return <span>선택 안함</span>;
     }
   } else if (type === "date") {
-    return <span>{STRING_UTIL.dateToDateString(value as Date)}</span>;
+    return <span>{STRING_UTIL.toDateString(value)}</span>;
   } else {
     return <span>{value.toString()}</span>;
   }

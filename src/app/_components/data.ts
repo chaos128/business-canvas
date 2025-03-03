@@ -37,6 +37,7 @@ export const recordFields: Record[] = [
     label: "이름",
     required: true,
     dataIndex: "name",
+    columnWidth: "12rem",
   },
   {
     type: "text",
@@ -55,6 +56,7 @@ export const recordFields: Record[] = [
     label: "가입일",
     required: true,
     dataIndex: "createdAt",
+    columnWidth: "20rem",
   },
   {
     type: "select",
@@ -73,6 +75,7 @@ export const recordFields: Record[] = [
     label: "이메일 수신 동의",
     required: false,
     dataIndex: "isContentedToReceiveEmail",
+    columnWidth: "15rem",
   },
 ];
 
@@ -85,4 +88,5 @@ export interface Record {
   dataIndex: TRecordDataIndex;
   defaultValue?: string;
   options?: { label: string; value: JobType }[];
+  columnWidth?: string;
 }

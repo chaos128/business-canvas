@@ -1,11 +1,13 @@
 export const STRING_UTIL: {
-  dateToDateString: (date: Date) => string;
+  toDateString: (date: Date | string) => string;
 } = {
-  dateToDateString: (date) => {
+  toDateString: (date) => {
     console.log(" date:", date);
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+
+    const newDate = typeof date === "string" ? new Date(date) : date;
+    return `${newDate.getFullYear()}-${String(newDate.getMonth() + 1).padStart(
       2,
       "0"
-    )}-${String(date.getDate()).padStart(2, "0")}`;
+    )}-${String(newDate.getDate()).padStart(2, "0")}`;
   },
 };

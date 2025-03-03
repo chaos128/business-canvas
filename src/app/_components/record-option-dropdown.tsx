@@ -28,7 +28,7 @@ function RecordOptionDropdown({
 
   return (
     <Dropdown menu={{ items }} trigger={["click"]}>
-      <Button icon={<MoreOutlined />} />
+      <Button type="text" icon={<MoreOutlined />} />
     </Dropdown>
   );
 }
