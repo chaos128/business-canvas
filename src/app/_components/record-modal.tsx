@@ -6,6 +6,7 @@ import { CloseOutlined } from "@ant-design/icons";
 import type { FormInstance, FormProps } from "antd";
 import { Button, Form, Modal } from "antd";
 import type { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { recordFields } from "./data";
 import { IRecordData } from "./useRecordData";
@@ -28,6 +29,7 @@ function RecordModal({
   onCancel: () => void;
   onOk: () => void;
 }) {
+  console.log(" recordData:", recordData);
   const addRecord = useRecordDataStore((state) => state.addRecord);
 
   const onFinish: FormProps<IRecordData>["onFinish"] = (values) => {
@@ -38,6 +40,7 @@ function RecordModal({
         createdAt: (values.createdAt as unknown as Dayjs).toDate(),
       })
     ) {
+      form.resetFields();
       handleOk();
     }
   };
@@ -48,6 +51,21 @@ function RecordModal({
   ) => {
     console.log("Failed:", errorInfo);
   };
+
+  const onClose = () => {
+    handleCancel();
+    form.resetFields();
+  };
+
+  useEffect(() => {
+    if (isModalOpen) {
+      form.setFieldsValue(
+        recordData
+          ? { ...recordData, createdAt: dayjs(recordData.createdAt) }
+          : { job: "개발자" }
+      );
+    }
+  }, [isModalOpen]);
 
   return (
     <Modal
@@ -64,21 +82,16 @@ function RecordModal({
         </div>
       }
       open={isModalOpen}
-      onOk={() => {
-        handleOk();
-      }}
       closeIcon={null}
-      onCancel={handleCancel}
+      onCancel={() => {
+        onClose();
+      }}
       footer={null}
     >
-      <Form
+      <Form<IRecordData>
         form={form}
         layout="vertical"
         name="basic"
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
-        style={{ maxWidth: 600 }}
-        initialValues={{ remember: true }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
@@ -94,7 +107,13 @@ function RecordModal({
           <SubmitButton form={form} fieldList={["name", "createdAt"]}>
             추가
           </SubmitButton>
-          <Button>취소</Button>
+          <Button
+            onClick={() => {
+              onClose();
+            }}
+          >
+            취소
+          </Button>
         </div>
       </Form>
     </Modal>

@@ -1,29 +1,26 @@
 import { MoreOutlined } from "@ant-design/icons";
 import { Button, Dropdown, MenuProps } from "antd";
+import { IRecordData } from "./useRecordDataStore";
 
-function RecordOptionDropdown() {
+function RecordOptionDropdown({
+  record,
+  onEdit: handleEdit,
+  onDelete: handleDelete,
+}: {
+  record: IRecordData;
+  onEdit: (record: IRecordData) => void;
+  onDelete: (key: React.Key) => void;
+}) {
   const items: MenuProps["items"] = [
     {
-      label: (
-        <a
-          href="https://www.antgroup.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          1st menu item
-        </a>
-      ),
+      label: <p onClick={() => handleEdit(record)}>수정</p>,
       key: "0",
     },
     {
       label: (
-        <a
-          href="https://www.aliyun.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          2nd menu item
-        </a>
+        <p className="text-error" onClick={() => handleDelete(record.key)}>
+          삭제
+        </p>
       ),
       key: "1",
     },

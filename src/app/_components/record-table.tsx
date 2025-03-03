@@ -1,18 +1,18 @@
 "use client";
 
 import { Table, TableProps } from "antd";
-import { IRecordData, useRecordData } from "./useRecordData";
+import { IRecordData, useRecordColumns } from "./useRecordData";
 import { useRecordDataStore } from "./useRecordDataStore";
 
-function RecordTable() {
-  const { columns } = useRecordData();
+function RecordTable({
+  onEdit,
+  onDelete,
+}: {
+  onEdit: (record: IRecordData) => void;
+  onDelete: (key: React.Key) => void;
+}) {
+  const { columns } = useRecordColumns({ onEdit, onDelete });
   const recordDataList = useRecordDataStore((state) => state.recordDataList);
-  const isLoading = useRecordDataStore((state) => state.isLoading);
-  console.log(" RecordTable : isLoading:", isLoading);
-
-  if (isLoading) {
-    return <div className="h-[50rem] animate-pulse rounded-2xl bg-gray-2002" />;
-  }
 
   const rowSelection: TableProps<IRecordData>["rowSelection"] = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: IRecordData[]) => {

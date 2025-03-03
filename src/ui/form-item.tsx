@@ -32,7 +32,6 @@ function FormItem<T>({
           <DatePicker showNow={false} className="w-[16rem]" />
         ) : type === "select" ? (
           <Select
-            defaultValue={defaultValue}
             options={options}
             popupMatchSelectWidth={false}
             dropdownStyle={{ width: "19.8rem" }}

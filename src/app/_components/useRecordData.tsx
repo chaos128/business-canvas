@@ -14,7 +14,13 @@ export interface IRecordData {
   isContentedToReceiveEmail: boolean;
 }
 
-export const useRecordData = () => {
+export const useRecordColumns = ({
+  onEdit: handleEdit,
+  onDelete: handleDelete,
+}: {
+  onEdit: (record: IRecordData) => void;
+  onDelete: (key: React.Key) => void;
+}) => {
   const columns: TableColumnsType<IRecordData> = useMemo(() => {
     const columnsFromRecordFields = recordFields.map(
       ({ type, dataIndex, label }) => {
@@ -38,8 +44,14 @@ export const useRecordData = () => {
     return [
       ...columnsFromRecordFields,
       {
-        render: () => {
-          return <RecordOptionDropdown />;
+        render: (data) => {
+          return (
+            <RecordOptionDropdown
+              record={data}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          );
         },
       },
     ];
