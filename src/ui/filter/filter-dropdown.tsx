@@ -28,7 +28,7 @@ function FilterDropdown({
 
   return (
     <div
-      className="min-w-[15rem] px-[2rem] py-[1.3rem] flex flex-col gap-y-[1.3rem]"
+      className="min-w-[15rem] p-[0.8rem]  flex flex-col gap-y-[0.8rem]"
       onKeyDown={(e) => e.stopPropagation()}
     >
       {filterList.map((value) => {

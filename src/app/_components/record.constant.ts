@@ -1,12 +1,5 @@
-import { FormType } from "@/types/form.type";
-
-export type TRecordDataIndex =
-  | "name"
-  | "address"
-  | "memo"
-  | "createdAt"
-  | "job"
-  | "isContentedToReceiveEmail";
+import type { IFormItem } from "../../ui/form-item";
+import { TRecordDataIndex } from "./useRecordDataStore";
 
 export const recordFields: RecordField[] = [
   {
@@ -56,14 +49,9 @@ export const recordFields: RecordField[] = [
   },
 ];
 
-type JobType = "개발자" | "PO" | "디자이너";
+export type JobType = "개발자" | "PO" | "디자이너";
 
-export interface RecordField {
-  type: FormType;
-  label: string;
-  required: boolean;
-  dataIndex: TRecordDataIndex;
+export interface RecordField extends IFormItem<TRecordDataIndex, JobType> {
   defaultValue?: string;
-  options?: { label: string; value: JobType }[];
   columnWidth?: string;
 }

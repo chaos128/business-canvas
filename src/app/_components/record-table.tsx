@@ -1,8 +1,9 @@
 "use client";
 
 import { Table, TableProps } from "antd";
-import { IRecordData, useRecordColumns } from "./useRecordColumns";
-import { useRecordDataStore } from "./useRecordDataStore";
+import { memo } from "react";
+import { useRecordColumns } from "./useRecordColumns";
+import { IRecordData, useRecordDataStore } from "./useRecordDataStore";
 
 function RecordTable({
   onEdit,
@@ -33,4 +34,4 @@ function RecordTable({
   );
 }
 
-export default RecordTable;
+export default memo(RecordTable);

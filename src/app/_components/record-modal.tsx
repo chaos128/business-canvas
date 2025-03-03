@@ -7,22 +7,31 @@ import { Button, Form, Modal } from "antd";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { recordFields } from "./data";
-import { IRecordData, useRecordDataStore } from "./useRecordDataStore";
+import { JobType, recordFields } from "./record.constant";
+import {
+  IRecordData,
+  TRecordDataIndex,
+  useRecordDataStore,
+} from "./useRecordDataStore";
 
 function RecordModal({
   isModalOpen,
   recordData,
-  onCancel: handleCancel,
-  onOk: handleOk,
+  onClose: handleClose,
 }: {
   recordData?: IRecordData;
   isModalOpen: boolean;
-  onCancel: () => void;
-  onOk: () => void;
+  onClose: () => void;
 }) {
+  const [form] = Form.useForm();
+
   const addRecord = useRecordDataStore((state) => state.addRecord);
   const editRecord = useRecordDataStore((state) => state.editRecord);
+
+  const handleCloseAndReset = () => {
+    handleClose();
+    form.resetFields();
+  };
 
   const onFinish: FormProps<IRecordData>["onFinish"] = (values) => {
     const newRecord = {
@@ -36,20 +45,13 @@ function RecordModal({
       addRecord(newRecord);
     }
 
-    form.resetFields();
-    handleOk();
+    handleCloseAndReset();
   };
-  const [form] = Form.useForm();
 
   const onFinishFailed: FormProps<IRecordData>["onFinishFailed"] = (
     errorInfo
   ) => {
     alert(errorInfo);
-  };
-
-  const onClose = () => {
-    handleCancel();
-    form.resetFields();
   };
 
   useEffect(() => {
@@ -70,7 +72,7 @@ function RecordModal({
           <h1 className=" text-base ">회원 추가</h1>
           <Button
             className="!w-[2.2rem] !h-[2.2rem] "
-            onClick={handleCancel}
+            onClick={handleCloseAndReset}
             type="text"
             icon={<CloseOutlined className="!text-[#000000]/45" />}
           />
@@ -78,9 +80,7 @@ function RecordModal({
       }
       open={isModalOpen}
       closeIcon={null}
-      onCancel={() => {
-        onClose();
-      }}
+      onCancel={handleCloseAndReset}
       footer={null}
     >
       <Form<IRecordData>
@@ -94,7 +94,10 @@ function RecordModal({
         <div className="py-[1.8rem] px-[2.4rem]">
           {recordFields.map((recordField) => {
             return (
-              <FormItem key={recordField.dataIndex} recordField={recordField} />
+              <FormItem<TRecordDataIndex, JobType>
+                key={recordField.dataIndex}
+                recordField={recordField}
+              />
             );
           })}
         </div>
@@ -102,13 +105,7 @@ function RecordModal({
           <SubmitButton form={form} fieldList={["name", "createdAt"]}>
             {recordData ? "수정" : "추가"}
           </SubmitButton>
-          <Button
-            onClick={() => {
-              onClose();
-            }}
-          >
-            취소
-          </Button>
+          <Button onClick={handleCloseAndReset}>취소</Button>
         </div>
       </Form>
     </Modal>
@@ -122,9 +119,7 @@ const SubmitButton: React.FC<
 > = ({ form, children, fieldList }) => {
   const [submittable, setSubmittable] = useState<boolean>(false);
 
-  // Watch all values
   const values = Form.useWatch([], form);
-  console.log(" values:", values, submittable);
 
   useEffect(() => {
     form

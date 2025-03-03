@@ -2,8 +2,8 @@ import FilterDropdown from "@/ui/filter/filter-dropdown";
 import { STRING_UTIL } from "@/utils/string.util";
 import { Checkbox, TableColumnsType } from "antd";
 import { Key, useMemo } from "react";
-import { recordFields } from "./data";
 import RecordEdit from "./record-edit";
+import { recordFields } from "./record.constant";
 import { IFilterMap, IRecordData } from "./useRecordDataStore";
 
 export const useRecordColumns = ({

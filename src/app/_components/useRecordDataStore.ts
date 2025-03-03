@@ -1,11 +1,19 @@
 import { enableMapSet } from "immer";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import { recordFields, TRecordDataIndex } from "./data";
+import { recordFields } from "./record.constant";
 
 const LOCAL_STORAGE_RECORD_DATA_KEY = "record-data";
 const LOCAL_STORAGE_INCREMENTING_KEY = "incrementing-key";
 enableMapSet();
+
+export type TRecordDataIndex =
+  | "name"
+  | "address"
+  | "memo"
+  | "createdAt"
+  | "job"
+  | "isContentedToReceiveEmail";
 
 export interface IRecordData {
   key: React.Key;
@@ -17,7 +25,6 @@ export interface IRecordData {
   isContentedToReceiveEmail: boolean;
 }
 
-export type TRecordFieldValueType = string | boolean | Date;
 export type IFilterMap = Record<TRecordDataIndex, Set<string>>;
 
 interface IRecordDataStore {

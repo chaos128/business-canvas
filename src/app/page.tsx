@@ -2,7 +2,7 @@
 
 import { PlusOutlined } from "@ant-design/icons";
 import { Button } from "antd";
-import { Key, useEffect, useState } from "react";
+import { Key, useCallback, useEffect, useState } from "react";
 import RecordModal from "./_components/record-modal";
 import RecordTable from "./_components/record-table";
 import {
@@ -13,21 +13,25 @@ import {
 export default function Home() {
   const init = useRecordDataStore((state) => state.init);
   const removeRecord = useRecordDataStore((state) => state.removeRecord);
-
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [recordForEdit, setRecordForEdit] = useState<IRecordData>();
+
   useEffect(() => {
     init();
   }, [init]);
 
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-
-  const handleEdit = (record: IRecordData) => {
+  const handleEdit = useCallback((record: IRecordData) => {
     setRecordForEdit(record);
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const handleDelete = (key: Key) => {
+  const handleDelete = useCallback((key: Key) => {
     removeRecord(key);
+  }, []);
+
+  const handleClose = () => {
+    setRecordForEdit(undefined);
+    setIsModalOpen(false);
   };
 
   return (
@@ -50,14 +54,7 @@ export default function Home() {
         <RecordModal
           recordData={recordForEdit}
           isModalOpen={isModalOpen}
-          onCancel={() => {
-            setRecordForEdit(undefined);
-            setIsModalOpen(false);
-          }}
-          onOk={() => {
-            setRecordForEdit(undefined);
-            setIsModalOpen(false);
-          }}
+          onClose={handleClose}
         />
       </main>
     </div>

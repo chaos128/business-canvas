@@ -1,11 +1,18 @@
-import { RecordField } from "@/app/_components/data";
-import { IRecordData } from "@/app/_components/useRecordDataStore";
+import { FormType } from "@/types/form.type";
 import { Checkbox, DatePicker, Form, Input, Select } from "antd";
 
-function FormItem({
+export interface IFormItem<T, S> {
+  type: FormType;
+  label: string;
+  required: boolean;
+  dataIndex: T;
+  options?: { label: string; value: S }[];
+}
+
+function FormItem<T, S>({
   recordField: { label, required, dataIndex, type, options },
 }: {
-  recordField: RecordField;
+  recordField: IFormItem<T, S>;
 }) {
   return (
     <div className="flex flex-col gap-[0.8rem]">
@@ -14,7 +21,7 @@ function FormItem({
         {required && <span className="text-error ml-[0.4rem]">*</span>}
       </div>
 
-      <Form.Item<IRecordData>
+      <Form.Item<any>
         name={dataIndex}
         rules={[{ required, message: `${label}을 입력해주세요. ` }]}
         wrapperCol={{ span: 24 }}
