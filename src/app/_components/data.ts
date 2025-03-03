@@ -1,27 +1,4 @@
-import type { TableColumnsType } from "antd";
-
-interface DataType {
-  key: React.Key;
-  name: string;
-  address: string;
-  memo: string;
-  createdAt: Date;
-  job: string;
-  isContentedToReceiveEmail: boolean;
-}
-
-const columns: TableColumnsType<DataType> = [
-  {
-    title: "Name",
-    dataIndex: "name",
-  },
-  {
-    title: "Address",
-    dataIndex: "address",
-  },
-];
-
-export type RecordType = "text" | "textarea" | "date" | "select" | "checkbox";
+import { FormType } from "@/types/form.type";
 
 export type TRecordDataIndex =
   | "name"
@@ -31,7 +8,7 @@ export type TRecordDataIndex =
   | "job"
   | "isContentedToReceiveEmail";
 
-export const recordFields: Record[] = [
+export const recordFields: RecordField[] = [
   {
     type: "text",
     label: "이름",
@@ -79,10 +56,10 @@ export const recordFields: Record[] = [
   },
 ];
 
-export type JobType = "개발자" | "PO" | "디자이너";
+type JobType = "개발자" | "PO" | "디자이너";
 
-export interface Record {
-  type: RecordType;
+export interface RecordField {
+  type: FormType;
   label: string;
   required: boolean;
   dataIndex: TRecordDataIndex;

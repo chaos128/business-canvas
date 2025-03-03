@@ -1,0 +1,49 @@
+import { FormType } from "@/types/form.type";
+import { Key } from "react";
+import FilterMenuItem from "./filter-menu-item";
+
+function FilterDropdown({
+  filterList,
+  setSelectedKeys,
+  selectedKeys,
+  type,
+  confirm,
+}: {
+  filterList: string[];
+  setSelectedKeys: (selectedKeys: Key[]) => void;
+  selectedKeys: Key[];
+  type: FormType;
+  confirm: () => void;
+}) {
+  const handleChange = (checked: boolean, value: string) => {
+    if (checked) {
+      setSelectedKeys([...selectedKeys, value]);
+    } else {
+      setSelectedKeys(
+        selectedKeys.filter((selectedKey) => selectedKey !== value)
+      );
+    }
+    confirm();
+  };
+
+  return (
+    <div
+      className="min-w-[15rem] px-[2rem] py-[1.3rem] flex flex-col gap-y-[1.3rem]"
+      onKeyDown={(e) => e.stopPropagation()}
+    >
+      {filterList.map((value) => {
+        return (
+          <FilterMenuItem
+            onChange={handleChange}
+            key={value.toString()}
+            isSelected={selectedKeys.includes(value)}
+            value={value}
+            type={type}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+export default FilterDropdown;

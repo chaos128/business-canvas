@@ -31,6 +31,7 @@ body {
 
 .ant-select-item-option-selected {
   color: var(--primary) !important;
+  font-weight: 400 !important;
 }
 
 .ant-select-open .ant-select-selection-item,

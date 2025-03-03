@@ -1,7 +1,8 @@
 "use client";
 
+import { PlusOutlined } from "@ant-design/icons";
+import { Button } from "antd";
 import { Key, useEffect, useState } from "react";
-import RecordAddButton from "./_components/record-add-button";
 import RecordModal from "./_components/record-modal";
 import RecordTable from "./_components/record-table";
 import {
@@ -34,11 +35,15 @@ export default function Home() {
       <main>
         <div className="flex justify-between my-[1.2rem] mx-[1.4rem]">
           <h1 className="text-heading">회원 목록</h1>
-          <RecordAddButton
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
             onClick={() => {
               setIsModalOpen(true);
             }}
-          />
+          >
+            추가
+          </Button>
         </div>
 
         <RecordTable onEdit={handleEdit} onDelete={handleDelete} />

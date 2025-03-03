@@ -18,6 +18,8 @@ const config: Config = {
         error: "#FF4D4F",
         tertiary: "#00000073",
         "border-secondary": "#F0F0F0",
+        "control-item-bg-hover": "#0000000A",
+        "control-item-bg-active": "#F0F7FF",
       },
       fontSize: {
         heading: [

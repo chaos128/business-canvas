@@ -1,19 +1,10 @@
+import FilterDropdown from "@/ui/filter/filter-dropdown";
 import { STRING_UTIL } from "@/utils/string.util";
 import { Checkbox, TableColumnsType } from "antd";
 import { Key, useMemo } from "react";
-import { recordFields, RecordType } from "./data";
-import RecordOptionDropdown from "./record-option-dropdown";
-import { IFilterMap } from "./useRecordDataStore";
-
-export interface IRecordData {
-  key: React.Key;
-  name: string;
-  address?: string;
-  memo?: string;
-  createdAt: Date;
-  job: string;
-  isContentedToReceiveEmail: boolean;
-}
+import { recordFields } from "./data";
+import RecordEdit from "./record-edit";
+import { IFilterMap, IRecordData } from "./useRecordDataStore";
 
 export const useRecordColumns = ({
   filterMap,
@@ -46,29 +37,13 @@ export const useRecordColumns = ({
             selectedKeys: Key[];
             confirm: () => void;
           }) => (
-            <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
-              {Array.from(filterMap[dataIndex]).map((value) => {
-                return (
-                  <div key={value.toString()}>
-                    <Checkbox
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setSelectedKeys([...selectedKeys, value]);
-                        } else {
-                          setSelectedKeys(
-                            selectedKeys.filter(
-                              (selectedKey) => selectedKey !== value
-                            )
-                          );
-                        }
-                        confirm();
-                      }}
-                    />
-                    <FilterOption type={type} value={value} />
-                  </div>
-                );
-              })}
-            </div>
+            <FilterDropdown
+              filterList={Array.from(filterMap[dataIndex])}
+              setSelectedKeys={setSelectedKeys}
+              selectedKeys={selectedKeys}
+              type={type}
+              confirm={confirm}
+            />
           ),
           onFilter: (value: boolean | Key, record: IRecordData) => {
             const recordValue =
@@ -97,7 +72,7 @@ export const useRecordColumns = ({
         width: "4.8rem",
         render: (data) => {
           return (
-            <RecordOptionDropdown
+            <RecordEdit
               record={data}
               onEdit={handleEdit}
               onDelete={handleDelete}
@@ -109,18 +84,4 @@ export const useRecordColumns = ({
   }, [filterMap]);
 
   return { columns };
-};
-
-const FilterOption = ({ type, value }: { type: RecordType; value: string }) => {
-  if (type === "checkbox") {
-    if (value === "true") {
-      return <span>선택됨</span>;
-    } else {
-      return <span>선택 안함</span>;
-    }
-  } else if (type === "date") {
-    return <span>{STRING_UTIL.toDateString(value)}</span>;
-  } else {
-    return <span>{value.toString()}</span>;
-  }
 };

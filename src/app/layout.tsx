@@ -29,6 +29,16 @@ export default function RootLayout({
             token: {
               colorPrimary: "#4a7cfe",
             },
+            components: {
+              Button: {
+                colorPrimary: "#4a7cfe",
+                colorPrimaryHover: "#739fff",
+                colorPrimaryActive: "#345DD9",
+              },
+              Checkbox: {
+                colorPrimary: "#4a7cfe",
+              },
+            },
           }}
         >
           <AntdRegistry>{children}</AntdRegistry>

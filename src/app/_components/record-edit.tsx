@@ -2,7 +2,7 @@ import { MoreOutlined } from "@ant-design/icons";
 import { Button, Dropdown, MenuProps } from "antd";
 import { IRecordData } from "./useRecordDataStore";
 
-function RecordOptionDropdown({
+function RecordEdit({
   record,
   onEdit: handleEdit,
   onDelete: handleDelete,
@@ -17,6 +17,9 @@ function RecordOptionDropdown({
       key: "edit",
     },
     {
+      type: "divider",
+    },
+    {
       label: (
         <a onClick={() => handleDelete(record.key)}>
           <span className="text-error">삭제</span>
@@ -27,10 +30,14 @@ function RecordOptionDropdown({
   ];
 
   return (
-    <Dropdown menu={{ items }} trigger={["click"]}>
+    <Dropdown
+      menu={{ items }}
+      trigger={["click"]}
+      overlayClassName="w-[18.5rem]"
+    >
       <Button type="text" icon={<MoreOutlined />} />
     </Dropdown>
   );
 }
 
-export default RecordOptionDropdown;
+export default RecordEdit;

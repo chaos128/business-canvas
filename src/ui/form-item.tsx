@@ -1,10 +1,11 @@
-import { Record } from "@/app/_components/data";
+import { RecordField } from "@/app/_components/data";
+import { IRecordData } from "@/app/_components/useRecordDataStore";
 import { Checkbox, DatePicker, Form, Input, Select } from "antd";
 
-function FormItem<T>({
-  recordField: { label, required, dataIndex, type, options, defaultValue },
+function FormItem({
+  recordField: { label, required, dataIndex, type, options },
 }: {
-  recordField: Record;
+  recordField: RecordField;
 }) {
   return (
     <div className="flex flex-col gap-[0.8rem]">
@@ -13,7 +14,7 @@ function FormItem<T>({
         {required && <span className="text-error ml-[0.4rem]">*</span>}
       </div>
 
-      <Form.Item<T>
+      <Form.Item<IRecordData>
         name={dataIndex}
         rules={[{ required, message: `${label}을 입력해주세요. ` }]}
         wrapperCol={{ span: 24 }}
@@ -26,7 +27,10 @@ function FormItem<T>({
             style={{ width: "100%" }}
           />
         ) : type === "textarea" ? (
-          <Input.TextArea placeholder="TextArea" />
+          <Input.TextArea
+            placeholder="TextArea"
+            className="!text-heading !font-normal"
+          />
         ) : type === "checkbox" ? (
           <Checkbox />
         ) : type === "date" ? (

@@ -1,6 +1,5 @@
 "use client";
 
-import ConditionalButton from "@/ui/conditional-button";
 import FormItem from "@/ui/form-item";
 import { CloseOutlined } from "@ant-design/icons";
 import type { FormInstance, FormProps } from "antd";
@@ -9,14 +8,7 @@ import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { recordFields } from "./data";
-import { IRecordData } from "./useRecordColumns";
-import { useRecordDataStore } from "./useRecordDataStore";
-
-type FieldType = {
-  username?: string;
-  password?: string;
-  remember?: string;
-};
+import { IRecordData, useRecordDataStore } from "./useRecordDataStore";
 
 function RecordModal({
   isModalOpen,
@@ -37,7 +29,6 @@ function RecordModal({
       ...values,
       createdAt: (values.createdAt as unknown as Dayjs).toDate(),
     };
-    console.log(" newRecord:", newRecord);
 
     if (recordData) {
       editRecord({ ...newRecord, key: recordData.key });
@@ -53,7 +44,7 @@ function RecordModal({
   const onFinishFailed: FormProps<IRecordData>["onFinishFailed"] = (
     errorInfo
   ) => {
-    console.log("Failed:", errorInfo);
+    alert(errorInfo);
   };
 
   const onClose = () => {
@@ -78,10 +69,10 @@ function RecordModal({
         <div className="flex items-center justify-between  px-[1.6rem] py-[1.2rem] border-b-[1px] border-b-border-secondary">
           <h1 className=" text-base ">회원 추가</h1>
           <Button
-            className="!w-[2.2rem] !h-[2.2rem]"
+            className="!w-[2.2rem] !h-[2.2rem] "
             onClick={handleCancel}
             type="text"
-            icon={<CloseOutlined className="text-tertiary" />}
+            icon={<CloseOutlined className="!text-[#000000]/45" />}
           />
         </div>
       }
@@ -143,8 +134,8 @@ const SubmitButton: React.FC<
   }, [form, values, fieldList]);
 
   return (
-    <ConditionalButton htmlType="submit" disabled={!submittable}>
+    <Button htmlType="submit" disabled={!submittable}>
       {children}
-    </ConditionalButton>
+    </Button>
   );
 };
