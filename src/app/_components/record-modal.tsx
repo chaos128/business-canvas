@@ -1,14 +1,15 @@
 "use client";
 
-import ConditionalButton from "@/ui/conditonal-button";
+import ConditionalButton from "@/ui/conditional-button";
 import FormItem from "@/ui/form-item";
 import { CloseOutlined } from "@ant-design/icons";
 import type { FormInstance, FormProps } from "antd";
 import { Button, Form, Modal } from "antd";
+import type { Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
 import { recordFields } from "./data";
-import { RecordDataType } from "./useRecordData";
+import { IRecordData } from "./useRecordData";
+import { useRecordDataStore } from "./useRecordDataStore";
 
 type FieldType = {
   username?: string;
@@ -22,19 +23,27 @@ function RecordModal({
   onCancel: handleCancel,
   onOk: handleOk,
 }: {
-  recordData?: RecordDataType;
+  recordData?: IRecordData;
   isModalOpen: boolean;
   onCancel: () => void;
   onOk: () => void;
 }) {
-  const { register, handleSubmit } = useForm<RecordDataType>();
-  const onSubmit: SubmitHandler<RecordDataType> = (data) => console.log(data);
-  const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
+  const addRecord = useRecordDataStore((state) => state.addRecord);
+
+  const onFinish: FormProps<IRecordData>["onFinish"] = (values) => {
     console.log("Success:", values);
+    if (
+      addRecord({
+        ...values,
+        createdAt: (values.createdAt as unknown as Dayjs).toDate(),
+      })
+    ) {
+      handleOk();
+    }
   };
   const [form] = Form.useForm();
 
-  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
+  const onFinishFailed: FormProps<IRecordData>["onFinishFailed"] = (
     errorInfo
   ) => {
     console.log("Failed:", errorInfo);

@@ -1,33 +1,38 @@
 "use client";
 
 import { Table, TableProps } from "antd";
-import { RecordDataType, useRecordData } from "./useRecordData";
+import { IRecordData, useRecordData } from "./useRecordData";
+import { useRecordDataStore } from "./useRecordDataStore";
 
 function RecordTable() {
-  const { recordData, columns } = useRecordData();
+  const { columns } = useRecordData();
+  const recordDataList = useRecordDataStore((state) => state.recordDataList);
+  const isLoading = useRecordDataStore((state) => state.isLoading);
+  console.log(" RecordTable : isLoading:", isLoading);
 
-  const rowSelection: TableProps<RecordDataType>["rowSelection"] = {
-    onChange: (
-      selectedRowKeys: React.Key[],
-      selectedRows: RecordDataType[]
-    ) => {
+  if (isLoading) {
+    return <div className="h-[50rem] animate-pulse rounded-2xl bg-gray-2002" />;
+  }
+
+  const rowSelection: TableProps<IRecordData>["rowSelection"] = {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: IRecordData[]) => {
       console.log(
         `selectedRowKeys: ${selectedRowKeys}`,
         "selectedRows: ",
         selectedRows
       );
     },
-    getCheckboxProps: (record: RecordDataType) => ({
+    getCheckboxProps: (record: IRecordData) => ({
       name: record.name,
     }),
   };
 
   return (
-    <Table<RecordDataType>
+    <Table<IRecordData>
       id="record-table"
       rowSelection={rowSelection}
       columns={columns}
-      dataSource={recordData}
+      dataSource={recordDataList}
       pagination={false}
     />
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import ConditionalButton from "@/ui/conditonal-button";
+import ConditionalButton from "@/ui/conditional-button";
 import { PlusOutlined } from "@ant-design/icons";
 import { ButtonProps } from "antd";
 

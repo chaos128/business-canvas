@@ -1,12 +1,19 @@
 "use client";
 
 import { Button } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import RecordAddButton from "./_components/record-add-button";
 import RecordModal from "./_components/record-modal";
 import RecordTable from "./_components/record-table";
+import { useRecordDataStore } from "./_components/useRecordDataStore";
 
 export default function Home() {
+  const init = useRecordDataStore((state) => state.init);
+
+  useEffect(() => {
+    init();
+  }, [init]);
+
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   return (
