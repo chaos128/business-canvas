@@ -11,8 +11,9 @@ function RecordTable({
   onEdit: (record: IRecordData) => void;
   onDelete: (key: React.Key) => void;
 }) {
-  const { columns } = useRecordColumns({ onEdit, onDelete });
   const recordDataList = useRecordDataStore((state) => state.recordDataList);
+  const filterMap = useRecordDataStore((state) => state.filterMap);
+  const { columns } = useRecordColumns({ onEdit, onDelete, filterMap });
 
   const rowSelection: TableProps<IRecordData>["rowSelection"] = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: IRecordData[]) => {
@@ -29,11 +30,15 @@ function RecordTable({
 
   return (
     <Table<IRecordData>
+      onChange={(_, filters) => {
+        console.log(" filters:", filters);
+      }}
       id="record-table"
       rowSelection={rowSelection}
       columns={columns}
       dataSource={recordDataList}
       pagination={false}
+      loading={recordDataList === undefined}
     />
   );
 }

@@ -39,17 +39,14 @@ function RecordModal({
     };
     console.log(" newRecord:", newRecord);
 
-    let result;
     if (recordData) {
-      result = editRecord({ ...newRecord, key: recordData.key });
+      editRecord({ ...newRecord, key: recordData.key });
     } else {
-      result = addRecord(newRecord);
+      addRecord(newRecord);
     }
 
-    if (result) {
-      form.resetFields();
-      handleOk();
-    }
+    form.resetFields();
+    handleOk();
   };
   const [form] = Form.useForm();
 

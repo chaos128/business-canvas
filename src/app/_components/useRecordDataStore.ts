@@ -1,7 +1,11 @@
+import { enableMapSet } from "immer";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
+import { recordFields, TRecordDataIndex } from "./data";
 
 const LOCAL_STORAGE_RECORD_DATA_KEY = "record-data";
+const LOCAL_STORAGE_INCREMENTING_KEY = "incrementing-key";
+enableMapSet();
 
 export interface IRecordData {
   key: React.Key;
@@ -13,25 +17,45 @@ export interface IRecordData {
   isContentedToReceiveEmail: boolean;
 }
 
+export type TRecordFieldValueType = string | boolean | Date;
+export type IFilterMap = Record<TRecordDataIndex, Set<TRecordFieldValueType>>;
+
 interface IRecordDataStore {
   incrementingKey: number;
   recordDataList?: IRecordData[];
   isUsingLocalStorage: boolean;
+  filterMap: IFilterMap;
+  recordDataIndexList?: TRecordDataIndex[];
   init(): void;
-  addRecord(record: IRecordData): boolean;
-  editRecord(record: IRecordData): boolean;
+  addRecord(record: IRecordData): void;
+  editRecord(record: IRecordData): void;
   removeRecord(key: React.Key): void;
-  updateRecordInLocalStorage: (recordDataList: IRecordData[]) => void;
+  updateRecordInLocalStorage: (
+    recordDataList: IRecordData[],
+    incrementingKey?: number
+  ) => void;
+  buildFilterMap: (
+    recordDataList: IRecordData[],
+    recordDataIndexList?: TRecordDataIndex[]
+  ) => { filterMap: IFilterMap; newRecordDataList: IRecordData[] };
 }
 
 const initialState = {
   incrementingKey: 3,
   isUsingLocalStorage: false,
+  filterMap: {
+    name: new Set<string>(),
+    address: new Set<string>(),
+    memo: new Set<string>(),
+    createdAt: new Set<Date>(),
+    job: new Set<string>(),
+    isContentedToReceiveEmail: new Set<boolean>(),
+  },
 };
 
-const INITIAL_RECORD_DATE_LIST: IRecordData[] = [
+const INITIAL_RECORD_DATA_LIST: IRecordData[] = [
   {
-    key: 1,
+    key: 2,
     name: "John Doe",
     address: "서울 강남구",
     memo: "외국인",
@@ -40,7 +64,7 @@ const INITIAL_RECORD_DATE_LIST: IRecordData[] = [
     isContentedToReceiveEmail: true,
   },
   {
-    key: 2,
+    key: 1,
     name: "Foo Bar",
     address: "서울 서초구",
     memo: "한국인",
@@ -51,51 +75,72 @@ const INITIAL_RECORD_DATE_LIST: IRecordData[] = [
 ];
 
 export const useRecordDataStore = create<IRecordDataStore>()(
-  immer((set) => ({
+  immer((set, get) => ({
     ...initialState,
     init: () => {
       const isUsingLocalStorage =
         process.env.NEXT_PUBLIC_STORAGE === "local-storage";
       let recordDataList;
+      let incrementingKey: number = get().incrementingKey;
 
       if (isUsingLocalStorage) {
         const savedData = localStorage.getItem(LOCAL_STORAGE_RECORD_DATA_KEY);
+        const savedIncrementingKey = localStorage.getItem(
+          LOCAL_STORAGE_INCREMENTING_KEY
+        );
 
-        if (savedData) {
-          recordDataList = JSON.parse(savedData).map((record: IRecordData) => ({
-            ...record,
-            createdAt: new Date(record.createdAt),
-          }));
+        if (savedData && savedIncrementingKey !== null) {
+          recordDataList = JSON.parse(savedData);
+          incrementingKey = parseInt(savedIncrementingKey);
         } else {
-          recordDataList = INITIAL_RECORD_DATE_LIST;
+          recordDataList = INITIAL_RECORD_DATA_LIST;
         }
       } else {
-        recordDataList = INITIAL_RECORD_DATE_LIST;
+        recordDataList = INITIAL_RECORD_DATA_LIST;
       }
 
+      const recordDataIndexList = recordFields.map(
+        ({ dataIndex }) => dataIndex
+      );
+
+      const { filterMap, newRecordDataList } = get().buildFilterMap(
+        recordDataList,
+        recordDataIndexList
+      );
+
       set((state) => {
-        state.recordDataList = recordDataList;
+        state.recordDataIndexList = recordDataIndexList;
+        state.recordDataList = newRecordDataList;
         state.isUsingLocalStorage = isUsingLocalStorage;
+        state.filterMap = filterMap;
+        state.incrementingKey = incrementingKey;
       });
     },
     addRecord: (record) => {
       set((state) => {
-        if (state.recordDataList) {
+        if (state.recordDataList && state.recordDataIndexList) {
+          state.recordDataIndexList.forEach((recordDataIndex) => {
+            const value = record[recordDataIndex];
+            const set = state.filterMap[recordDataIndex];
+            if (value !== undefined) {
+              set.add(value);
+            }
+          });
+
           state.recordDataList.unshift({
             ...record,
-            key: state.incrementingKey,
+            key: state.incrementingKey.toString(),
           });
           state.incrementingKey++;
 
           if (state.isUsingLocalStorage) {
-            state.updateRecordInLocalStorage(state.recordDataList);
+            state.updateRecordInLocalStorage(
+              state.recordDataList,
+              state.incrementingKey
+            );
           }
-        } else {
-          return false;
         }
       });
-
-      return true;
     },
     editRecord: (record) => {
       set((state) => {
@@ -108,33 +153,75 @@ export const useRecordDataStore = create<IRecordDataStore>()(
             state.recordDataList[index] = record;
           }
 
+          const { filterMap } = get().buildFilterMap(state.recordDataList);
+          state.filterMap = filterMap;
+
           if (state.isUsingLocalStorage) {
             state.updateRecordInLocalStorage(state.recordDataList);
           }
-        } else {
-          return false;
         }
       });
-
-      return true;
     },
-
     removeRecord: (key) => {
       set((state) => {
         state.recordDataList = (state.recordDataList ?? []).filter(
           (record) => record.key !== key
         );
 
+        const { filterMap } = get().buildFilterMap(state.recordDataList);
+        state.filterMap = filterMap;
+
         if (state.isUsingLocalStorage) {
           state.updateRecordInLocalStorage(state.recordDataList);
         }
       });
     },
-    updateRecordInLocalStorage: (recordDataList) => {
+    updateRecordInLocalStorage: (recordDataList, incrementingKey) => {
       localStorage.setItem(
         LOCAL_STORAGE_RECORD_DATA_KEY,
         JSON.stringify(recordDataList)
       );
+
+      if (incrementingKey !== undefined) {
+        localStorage.setItem(
+          LOCAL_STORAGE_INCREMENTING_KEY,
+          JSON.stringify(incrementingKey)
+        );
+      }
+    },
+    buildFilterMap: (recordDataList, recordDataIndexList) => {
+      const filterMap = {
+        name: new Set<string>(),
+        address: new Set<string>(),
+        memo: new Set<string>(),
+        createdAt: new Set<Date>(),
+        job: new Set<string>(),
+        isContentedToReceiveEmail: new Set<boolean>(),
+      };
+
+      const newRecordDataList = recordDataList.map((record: IRecordData) => {
+        const newCreatedAt =
+          typeof record.createdAt === "string"
+            ? new Date(record.createdAt)
+            : record.createdAt;
+
+        (recordDataIndexList ?? get().recordDataIndexList ?? []).forEach(
+          (recordDataIndex) => {
+            const value = record[recordDataIndex];
+            const set = filterMap[recordDataIndex];
+            if (value !== undefined) {
+              set.add(value);
+            }
+          }
+        );
+
+        return {
+          ...record,
+          createdAt: newCreatedAt,
+        };
+      });
+
+      return { filterMap, newRecordDataList };
     },
   }))
 );

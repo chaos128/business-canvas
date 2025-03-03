@@ -23,6 +23,14 @@ const columns: TableColumnsType<DataType> = [
 
 export type RecordType = "text" | "textarea" | "date" | "select" | "checkbox";
 
+export type TRecordDataIndex =
+  | "name"
+  | "address"
+  | "memo"
+  | "createdAt"
+  | "job"
+  | "isContentedToReceiveEmail";
+
 export const recordFields: Record[] = [
   {
     type: "text",
@@ -74,7 +82,7 @@ export interface Record {
   type: RecordType;
   label: string;
   required: boolean;
-  dataIndex: string;
+  dataIndex: TRecordDataIndex;
   defaultValue?: string;
   options?: { label: string; value: JobType }[];
 }
