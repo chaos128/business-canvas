@@ -16,8 +16,6 @@ export function useTableFiltersReset<T extends string>({
       T,
       string[] | null
     >;
-    console.log(" useEffect : newFilteredInfo:", newFilteredInfo);
-
     Object.entries(filteredInfo ?? {}).forEach(([key, value]) => {
       if (value) {
         (value as string[]).forEach((eachFilterValue) => {
