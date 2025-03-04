@@ -1,22 +1,16 @@
 import { enableMapSet } from "immer";
+import { Key } from "react";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { recordFields } from "./record.constant";
 
 const LOCAL_STORAGE_RECORD_DATA_KEY = "record-data";
 const LOCAL_STORAGE_INCREMENTING_KEY = "incrementing-key";
+const LOCAL_STORAGE_KEY = "local-storage";
+
 enableMapSet();
-
-export type TRecordDataIndex =
-  | "name"
-  | "address"
-  | "memo"
-  | "createdAt"
-  | "job"
-  | "isContentedToReceiveEmail";
-
 export interface IRecordData {
-  key: React.Key;
+  key: Key;
   name: string;
   address?: string;
   memo?: string;
@@ -25,18 +19,20 @@ export interface IRecordData {
   isContentedToReceiveEmail: boolean;
 }
 
-export type IFilterMap = Record<TRecordDataIndex, Set<string>>;
+export type TRecordDataIndex = keyof Omit<IRecordData, "key">;
+
+export type IRecordFilterMap = Record<TRecordDataIndex, Set<string>>;
 
 interface IRecordDataStore {
   incrementingKey: number;
   recordDataList?: IRecordData[];
   isUsingLocalStorage: boolean;
-  filterMap: IFilterMap;
+  filterMap: IRecordFilterMap;
   recordDataIndexList?: TRecordDataIndex[];
   init(): void;
   addRecord(record: IRecordData): void;
   editRecord(record: IRecordData): void;
-  removeRecord(key: React.Key): void;
+  removeRecord(key: Key): void;
   updateRecordInLocalStorage: (
     recordDataList: IRecordData[],
     incrementingKey?: number
@@ -44,11 +40,11 @@ interface IRecordDataStore {
   buildFilterMap: (
     recordDataList: IRecordData[],
     recordDataIndexList?: TRecordDataIndex[]
-  ) => { filterMap: IFilterMap; newRecordDataList: IRecordData[] };
+  ) => { filterMap: IRecordFilterMap; newRecordDataList: IRecordData[] };
 }
 
 const initialState = {
-  incrementingKey: 3,
+  incrementingKey: 3, // DB table 의 incrementing primary key 와 같이 사용
   isUsingLocalStorage: false,
   filterMap: {
     name: new Set<string>(),
@@ -86,7 +82,7 @@ export const useRecordDataStore = create<IRecordDataStore>()(
     ...initialState,
     init: () => {
       const isUsingLocalStorage =
-        process.env.NEXT_PUBLIC_STORAGE === "local-storage";
+        process.env.NEXT_PUBLIC_STORAGE === LOCAL_STORAGE_KEY;
       let recordDataList;
       let incrementingKey: number = get().incrementingKey;
 
@@ -199,7 +195,7 @@ export const useRecordDataStore = create<IRecordDataStore>()(
       }
     },
     buildFilterMap: (recordDataList, recordDataIndexList) => {
-      const filterMap = {
+      const filterMap: IRecordFilterMap = {
         name: new Set<string>(),
         address: new Set<string>(),
         memo: new Set<string>(),

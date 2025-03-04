@@ -1,16 +1,14 @@
-import { FormType } from "@/types/form.type";
+import type { FormDataType } from "@/types/form.type";
 import { STRING_UTIL } from "@/utils/string.util";
 
 function FilterMenuItemText({
   type,
   value,
 }: {
-  type: FormType;
+  type: FormDataType;
   value: string;
 }) {
   if (type === "checkbox") {
-    console.log(" value:", value);
-
     if (value === "true") {
       return <span>선택됨</span>;
     } else {

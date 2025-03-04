@@ -1,15 +1,14 @@
 import { MoreOutlined } from "@ant-design/icons";
 import { Button, Dropdown, MenuProps } from "antd";
-import { IRecordData } from "./useRecordDataStore";
 
-function RecordEdit({
+function DropdownEditOptions<T>({
   record,
   onEdit: handleEdit,
   onDelete: handleDelete,
 }: {
-  record: IRecordData;
-  onEdit: (record: IRecordData) => void;
-  onDelete: (key: React.Key) => void;
+  record: T;
+  onEdit: (record: T) => void;
+  onDelete: (record: T) => void;
 }) {
   const items: MenuProps["items"] = [
     {
@@ -21,7 +20,7 @@ function RecordEdit({
     },
     {
       label: (
-        <a onClick={() => handleDelete(record.key)}>
+        <a onClick={() => handleDelete(record)}>
           <span className="text-error">삭제</span>
         </a>
       ),
@@ -40,4 +39,4 @@ function RecordEdit({
   );
 }
 
-export default RecordEdit;
+export default DropdownEditOptions;

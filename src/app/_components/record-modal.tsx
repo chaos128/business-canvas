@@ -6,7 +6,7 @@ import type { FormInstance, FormProps } from "antd";
 import { Button, Form, Modal } from "antd";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { FC, PropsWithChildren, useEffect, useMemo, useState } from "react";
 import { JobType, recordFields } from "./record.constant";
 import {
   IRecordData,
@@ -54,12 +54,25 @@ function RecordModal({
     alert(errorInfo);
   };
 
+  const defaultValueMap = useMemo(() => {
+    const defaultValueMap: Partial<IRecordData> = {};
+
+    recordFields.forEach(({ dataIndex, defaultValue }) => {
+      if (defaultValue !== undefined) {
+        (defaultValueMap[dataIndex as keyof IRecordData] as string | boolean) =
+          defaultValue;
+      }
+    });
+
+    return defaultValueMap;
+  }, []);
+
   useEffect(() => {
     if (isModalOpen) {
       form.setFieldsValue(
         recordData
           ? { ...recordData, createdAt: dayjs(recordData.createdAt) }
-          : { job: "개발자", isContentedToReceiveEmail: false }
+          : defaultValueMap
       );
     }
   }, [isModalOpen, form, recordData]);
@@ -114,8 +127,8 @@ function RecordModal({
 
 export default RecordModal;
 
-const SubmitButton: React.FC<
-  React.PropsWithChildren<{ form: FormInstance; fieldList: string[] }>
+const SubmitButton: FC<
+  PropsWithChildren<{ form: FormInstance; fieldList: string[] }>
 > = ({ form, children, fieldList }) => {
   const [submittable, setSubmittable] = useState<boolean>(false);
 
@@ -129,7 +142,7 @@ const SubmitButton: React.FC<
   }, [form, values, fieldList]);
 
   return (
-    <Button htmlType="submit" disabled={!submittable}>
+    <Button type="primary" htmlType="submit" disabled={!submittable}>
       {children}
     </Button>
   );

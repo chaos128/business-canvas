@@ -1,7 +1,7 @@
 import type { IFormItem } from "../../ui/form-item";
 import { TRecordDataIndex } from "./useRecordDataStore";
 
-export const recordFields: RecordField[] = [
+export const recordFields: IRecordField[] = [
   {
     type: "text",
     label: "이름",
@@ -46,12 +46,12 @@ export const recordFields: RecordField[] = [
     required: false,
     dataIndex: "isContentedToReceiveEmail",
     columnWidth: "15rem",
+    defaultValue: false,
   },
 ];
 
 export type JobType = "개발자" | "PO" | "디자이너";
 
-export interface RecordField extends IFormItem<TRecordDataIndex, JobType> {
-  defaultValue?: string;
-  columnWidth?: string;
+export interface IRecordField extends IFormItem<TRecordDataIndex, JobType> {
+  defaultValue?: string | boolean;
 }

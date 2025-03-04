@@ -1,4 +1,4 @@
-import { FormType } from "@/types/form.type";
+import type { FormDataType } from "@/types/form.type";
 import { Checkbox } from "antd";
 import FilterMenuItemText from "./filter-menu-item-text";
 
@@ -10,7 +10,7 @@ function FilterMenuItem({
 }: {
   onChange: (checked: boolean, value: string) => void;
   value: string;
-  type: FormType;
+  type: FormDataType;
   isSelected: boolean;
 }) {
   return (

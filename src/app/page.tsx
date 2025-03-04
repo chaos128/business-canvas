@@ -2,7 +2,7 @@
 
 import { PlusOutlined } from "@ant-design/icons";
 import { Button } from "antd";
-import { Key, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import RecordModal from "./_components/record-modal";
 import RecordTable from "./_components/record-table";
 import {
@@ -20,46 +20,44 @@ export default function Home() {
     init();
   }, [init]);
 
-  const handleEdit = useCallback((record: IRecordData) => {
+  const handleRecordEdit = useCallback((record: IRecordData) => {
     setRecordForEdit(record);
     setIsModalOpen(true);
   }, []);
 
-  const handleDelete = useCallback(
-    (key: Key) => {
-      removeRecord(key);
+  const handleRecordDelete = useCallback(
+    (record: IRecordData) => {
+      removeRecord(record.key);
     },
     [removeRecord]
   );
 
-  const handleClose = () => {
+  const handleModalClose = () => {
     setRecordForEdit(undefined);
     setIsModalOpen(false);
   };
 
   return (
-    <div>
-      <main>
-        <div className="flex justify-between my-[1.2rem] mx-[1.4rem]">
-          <h1 className="text-heading">회원 목록</h1>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => {
-              setIsModalOpen(true);
-            }}
-          >
-            추가
-          </Button>
-        </div>
+    <main>
+      <div className="flex justify-between my-[1.2rem] mx-[1.4rem]">
+        <h1 className="text-heading">회원 목록</h1>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={() => {
+            setIsModalOpen(true);
+          }}
+        >
+          추가
+        </Button>
+      </div>
 
-        <RecordTable onEdit={handleEdit} onDelete={handleDelete} />
-        <RecordModal
-          recordData={recordForEdit}
-          isModalOpen={isModalOpen}
-          onClose={handleClose}
-        />
-      </main>
-    </div>
+      <RecordTable onEdit={handleRecordEdit} onDelete={handleRecordDelete} />
+      <RecordModal
+        recordData={recordForEdit}
+        isModalOpen={isModalOpen}
+        onClose={handleModalClose}
+      />
+    </main>
   );
 }

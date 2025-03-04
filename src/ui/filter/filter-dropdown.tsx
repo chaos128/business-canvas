@@ -1,7 +1,8 @@
-import { FormType } from "@/types/form.type";
+import type { FormDataType } from "@/types/form.type";
 import { Key } from "react";
 import FilterMenuItem from "./filter-menu-item";
 
+// customized filter dropdown - 시안상 antd Table의 filter 와 다르게 Reset, Ok 버튼이 없어 추가 개발하였습니다.
 function FilterDropdown({
   filterList,
   setSelectedKeys,
@@ -12,11 +13,10 @@ function FilterDropdown({
   filterList: string[];
   setSelectedKeys: (selectedKeys: Key[]) => void;
   selectedKeys: Key[];
-  type: FormType;
+  type: FormDataType;
   confirm: () => void;
 }) {
   const handleChange = (checked: boolean, value: string) => {
-    console.log(" handleChange : value:", value);
     if (checked) {
       setSelectedKeys([...selectedKeys, value]);
     } else {

@@ -1,8 +1,8 @@
 "use client";
 
 import { Table, TableProps } from "antd";
-import { memo, useEffect, useState } from "react";
-import { useRecordColumns } from "./useRecordColumns";
+import { memo } from "react";
+import { useRecordTableColumns } from "./useRecordColumns";
 import {
   IRecordData,
   TRecordDataIndex,
@@ -14,25 +14,14 @@ function RecordTable({
   onDelete,
 }: {
   onEdit: (record: IRecordData) => void;
-  onDelete: (key: React.Key) => void;
+  onDelete: (record: IRecordData) => void;
 }) {
-  const [filteredInfo, setFilteredInfo] = useState<
-    Record<TRecordDataIndex, string[] | null>
-  >({
-    name: null,
-    address: null,
-    memo: null,
-    job: null,
-    isContentedToReceiveEmail: null,
-    createdAt: null,
-  });
   const recordDataList = useRecordDataStore((state) => state.recordDataList);
   const filterMap = useRecordDataStore((state) => state.filterMap);
-  const { columns } = useRecordColumns({
+  const { columns, setFilteredInfo } = useRecordTableColumns({
     onEdit,
     onDelete,
     filterMap,
-    filteredInfo,
   });
 
   const rowSelection: TableProps<IRecordData>["rowSelection"] = {
@@ -47,34 +36,6 @@ function RecordTable({
   ) => {
     setFilteredInfo(filters as Record<TRecordDataIndex, string[] | null>);
   };
-
-  useEffect(() => {
-    const newFilteredInfo: Record<TRecordDataIndex, string[] | null> = {
-      name: null,
-      address: null,
-      memo: null,
-      job: null,
-      isContentedToReceiveEmail: null,
-      createdAt: null,
-    };
-
-    Object.entries(filteredInfo).forEach(([key, value]) => {
-      if (value) {
-        value.forEach((eachFilterValue) => {
-          if (filterMap[key as TRecordDataIndex].has(eachFilterValue)) {
-            let valueList = newFilteredInfo[key as TRecordDataIndex];
-            if (valueList === null) {
-              valueList = [];
-            }
-            valueList.push(eachFilterValue);
-            newFilteredInfo[key as TRecordDataIndex] = valueList;
-          }
-        });
-      }
-    });
-
-    setFilteredInfo(newFilteredInfo);
-  }, [filterMap]);
 
   return (
     <Table<IRecordData>

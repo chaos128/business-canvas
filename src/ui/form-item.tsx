@@ -1,12 +1,13 @@
-import { FormType } from "@/types/form.type";
+import type { FormDataType } from "@/types/form.type";
 import { Checkbox, DatePicker, Form, Input, Select } from "antd";
 
 export interface IFormItem<T, S> {
-  type: FormType;
+  type: FormDataType;
   label: string;
   required: boolean;
   dataIndex: T;
   options?: { label: string; value: S }[];
+  columnWidth?: string;
 }
 
 function FormItem<T, S>({

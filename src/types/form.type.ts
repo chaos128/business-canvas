@@ -1,1 +1,1 @@
-export type FormType = "text" | "textarea" | "date" | "select" | "checkbox";
+export type FormDataType = "text" | "textarea" | "date" | "select" | "checkbox";
